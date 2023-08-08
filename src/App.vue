@@ -5,6 +5,7 @@
 
   const registerSuccess = ref(false)
   const loginSucess = ref(false)
+  const loginRegisterTxt = ref('')
   const titleText = ref('Register')
   const registerData = reactive({
     email: '',
@@ -14,12 +15,12 @@
 
   const updateRgisterStatus = (status) => {
     registerSuccess.value = status
+    loginRegisterTxt.value = "Successfully Register"
     titleText.value = 'Login'
   }
   
   const updateLoginStatus = (status) => {
     loginSucess.value = status
-    titleText.value = 'Welcome'
   }
 </script>
 
@@ -31,10 +32,14 @@
       </div>
       <div class="w-1/2 flex flex-col justify-center items-center bg-gray-200">
         <h2 class="mb-5 text-xl">{{ titleText }}</h2>
-        <p v-show="registerSuccess" class="text-green-500 text-xs italic mb-3">Successfully Register</p>
+        <p v-show="registerSuccess && loginRegisterTxt" class="text-green-500 text-xs italic mb-3">{{ loginRegisterTxt }}</p>
         <div class="w-full max-w-xs">
           <Register v-if="!registerSuccess" @updateRgisterStatus = "updateRgisterStatus" :registerData = "registerData"></Register>
           <Login @updateLoginStatus = "updateLoginStatus" v-else></Login>
+
+          <p v-if="titleText == 'Register' " class="text-black-500 text-xs italic mb-3 mt-3 text-center">Already have a account <span class="cursor-pointer text-blue-500 font-bold" @click.prevent="registerSuccess = true; titleText = 'Login'">Sign In</span></p>
+
+          <p v-if="titleText == 'Login' " class="text-black-500 text-xs italic mb-3 mt-3 text-center">Don't have a account <span class="cursor-pointer text-blue-500 font-bold" @click.prevent="registerSuccess = false; titleText = 'Register'">Register</span></p>
           <p class="text-center text-gray-500 text-xs">
             &copy;2020 Acme Corp. All rights reserved.
           </p>
